@@ -1,53 +1,54 @@
-# To learn more about how to use Nix to configure your environment
-# see: https://developers.google.com/idx/guides/customize-idx-env
+
 { pkgs, ... }: {
-  # Which nixpkgs channel to use.
-  channel = "stable-24.05"; # or "unstable"
-  # Use https://search.nixos.org/packages to find packages
+  # Using the stable-24.05 channel for nixpkgs.
+  channel = "stable-24.05";
+  
+  # A list of packages to be installed in the environment.
+  # We are including Node.js 20 and npm for our web application.
   packages = [
-    # pkgs.go
-    # pkgs.python311
-    # pkgs.python311Packages.pip
-    # pkgs.nodejs_20
-    # pkgs.nodePackages.nodemon
+    pkgs.nodejs_20
+    pkgs.nodePackages.npm
   ];
-  # Sets environment variables in the workspace
-  env = {};
+
+  # Sets environment variables in the workspace.
+  env = {
+    # The API key for the Supabase project.
+    SUPABASE_API_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBlZWJvZnV4cmRqamhsdmhnbG15Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTQwNTMxODgsImV4cCI6MjA2OTYyOTE4OH0.fjEEp99LcRZ8___7hFlmDDn28KQSHDOZ2hk47rhLdzM";
+    # The project URL for the Supabase project.
+    SUPABASE_PROJECT_URL = "https://peebofuxrdjjhlvhglmy.supabase.co";
+  };
+
   idx = {
-    # Search for the extensions you want on https://open-vsx.org/ and use "publisher.id"
+    # A list of VS Code extensions to be installed.
     extensions = [
-      # "vscodevim.vim"
-      "google.gemini-cli-vscode-ide-companion"
+      # An extension for code linting.
+      "dbaeumer.vscode-eslint"
     ];
-    # Enable previews
+
+    # Configuration for the web preview.
     previews = {
       enable = true;
       previews = {
-        # web = {
-        #   # Example: run "npm run dev" with PORT set to IDX's defined port for previews,
-        #   # and show it in IDX's web preview panel
-        #   command = ["npm" "run" "dev"];
-        #   manager = "web";
-        #   env = {
-        #     # Environment variables to set for your server
-        #     PORT = "$PORT";
-        #   };
-        # };
+        web = {
+          # The command to start the development server.
+          command = ["npm" "run" "dev" "--" "--port" "$PORT"];
+          # The manager for the web preview.
+          manager = "web";
+        };
       };
     };
-    # Workspace lifecycle hooks
+
+    # Workspace lifecycle hooks.
     workspace = {
-      # Runs when a workspace is first created
+      # Runs when a workspace is first created.
       onCreate = {
-        # Example: install JS dependencies from NPM
-        # npm-install = "npm install";
-        # Open editors for the following files by default, if they exist:
-        default.openFiles = [ ".idx/dev.nix" "README.md" ];
+        # Installs the npm dependencies.
+        npm-install = "npm install";
       };
-      # Runs when the workspace is (re)started
+      # Runs when the workspace is (re)started.
       onStart = {
-        # Example: start a background task to watch and re-build backend code
-        # watch-backend = "npm run watch-backend";
+        # Starts the development server.
+        dev-server = "npm run dev";
       };
     };
   };
