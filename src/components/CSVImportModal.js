@@ -2,40 +2,42 @@
 import { useState } from 'react';
 import Modal from 'react-modal';
 import Papa from 'papaparse';
-import { supabase } from '../lib/supabaseClient';
+import { supabase } from '@/lib/supabaseClient';
+import styles from '@/styles/CSVImportModal.module.css';
 
 Modal.setAppElement('#__next');
 
 export default function CSVImportModal({ isOpen, onRequestClose, onImport }) {
   const [file, setFile] = useState(null);
+  const [fileName, setFileName] = useState('');
+  const [notification, setNotification] = useState({ message: '', type: '' });
 
   const handleFileChange = (e) => {
-    setFile(e.target.files[0]);
+    const chosenFile = e.target.files[0];
+    if (chosenFile) {
+      setFile(chosenFile);
+      setFileName(chosenFile.name);
+      setNotification({ message: '', type: '' });
+    }
   };
 
   const handleImport = async () => {
     if (!file) {
-      alert('Please select a file to import.');
+      setNotification({ message: 'Please select a file to import.', type: 'error' });
       return;
     }
 
     const headerMapping = {
-      'Transaction Completed Date Time': 'transaction_completed_date_time',
-      'Event Name': 'event_name',
-      'Channel Name': 'channel_name',
-      'Price Band Name': 'price_band_name',
-      'Performance Date Time': 'performance_date_time',
-      'Performance Start Time': 'performance_start_time',
-      'Transaction Completed At': 'transaction_completed_at',
-      'Sold Tickets': 'sold_tickets',
-      'Comp Tickets': 'comp_tickets',
-      'Sold Gross Value': 'sold_gross_value',
-      'Sales ID': 'sales_id',
-      'Transaction Date': 'transaction_date',
-      'Performance Date': 'performance_date',
-      'Show Time': 'show_time',
-      'ATP': 'atp',
-      'Transaction DOW': 'transaction_dow',
+        'Transaction Completed Date Time': 'transaction_completed_date_time',
+        'Event Name': 'event_name',
+        'Channel Name': 'channel_name',
+        'Price Band Name': 'price_band_name',
+        'Performance Date Time': 'performance_date_time',
+        'Performance Start Time': 'performance_start_time',
+        'Transaction Completed At': 'transaction_completed_at',
+        'Sold Tickets': 'sold_tickets',
+        'Comp Tickets': 'comp_tickets',
+        'Sold Gross Value': 'sold_gross_value',
     };
 
     Papa.parse(file, {
@@ -50,43 +52,106 @@ export default function CSVImportModal({ isOpen, onRequestClose, onImport }) {
               newRow[headerMapping[key.trim()]] = value === '' ? null : value;
             }
           }
+          // Derive show_time from performance_start_time
+          if (newRow.performance_start_time) {
+              const hour = parseInt(newRow.performance_start_time.split(':')[0], 10);
+              newRow.show_time = hour < 17 ? 'Matinee' : 'Evening';
+          } else {
+              newRow.show_time = null;
+          }
           return newRow;
         });
 
         const filteredData = mappedData.filter(row => Object.values(row).some(val => val !== null && val !== ''));
 
         if (filteredData.length > 0) {
+          // Upsert shows, filtering out any that couldn't have a show_time derived
+          const showsToUpsert = filteredData
+            .filter(item => item.event_name && item.show_time)
+            .map(item => ({ event_name: item.event_name, show_time: item.show_time }));
+
+          const uniqueShows = [...new Map(showsToUpsert.map(item => [`${item.event_name}-${item.show_time}`, item])).values()];
+
+          if (uniqueShows.length > 0) {
+              const { error: showsError } = await supabase.from('shows').upsert(uniqueShows, { onConflict: 'event_name,show_time' });
+              if (showsError) {
+                console.error('Error upserting shows:', showsError);
+                setNotification({ message: `Error upserting shows: ${showsError.message}`, type: 'error' });
+                return;
+              }
+          }
+
           const { error } = await supabase.from('sales').insert(filteredData);
 
           if (error) {
             console.error('Error inserting data:', error);
-            alert(`Error inserting data: ${error.message}`);
+            setNotification({ message: `Error inserting data: ${error.message}`, type: 'error' });
           } else {
-            alert('Data imported successfully!');
+            setNotification({ message: 'Data imported successfully!', type: 'success' });
             onImport();
-            onRequestClose();
+            setTimeout(() => {
+              onRequestClose();
+              setNotification({ message: '', type: '' });
+            }, 2000);
           }
         } else {
-          alert('No data to import. The CSV file may be empty or the headers do not match.');
+          setNotification({ message: 'No data to import. The CSV file may be empty or the headers do not match.', type: 'error' });
         }
       },
       error: (error) => {
         console.error('Error parsing CSV:', error);
-        alert('Error parsing CSV file. See console for details.');
+        setNotification({ message: 'Error parsing CSV file. See console for details.', type: 'error' });
       }
     });
+  };
+
+  const handleClose = () => {
+    setFile(null);
+    setFileName('');
+    setNotification({ message: '', type: '' });
+    onRequestClose();
   };
 
   return (
     <Modal
       isOpen={isOpen}
-      onRequestClose={onRequestClose}
+      onRequestClose={handleClose}
       contentLabel="Import CSV"
+      className={styles.modalContent}
+      overlayClassName={styles.modalOverlay}
     >
-      <h2>Import CSV</h2>
-      <input type="file" accept=".csv" onChange={handleFileChange} />
-      <button onClick={handleImport}>Import</button>
-      <button onClick={onRequestClose}>Close</button>
+      <h2 className={styles.modalTitle}>Import CSV</h2>
+      <label className={styles.fileInputLabel}>
+        Choose File
+        <input
+          type="file"
+          accept=".csv"
+          onChange={handleFileChange}
+          className={styles.fileInput}
+        />
+      </label>
+      {fileName && <p className={styles.fileName}>{fileName}</p>}
+      
+      {notification.message && (
+        <div className={`${styles.notification} ${styles[notification.type]}`}>
+          {notification.message}
+        </div>
+      )}
+
+      <div className={styles.buttonContainer}>
+        <button
+          onClick={handleImport}
+          className={`${styles.button} ${styles.importButton}`}
+          disabled={!file}
+        > 
+          Import
+        </button>
+        <button
+          onClick={handleClose}
+          className={`${styles.button} ${styles.closeButton}`}>
+          Close
+        </button>
+      </div>
     </Modal>
   );
 }

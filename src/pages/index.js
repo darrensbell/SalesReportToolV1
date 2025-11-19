@@ -1,69 +1,71 @@
 
 import { useState, useEffect } from 'react';
-import Link from 'next/link';
-import { supabase } from '../lib/supabaseClient';
+import { supabase } from '@/lib/supabaseClient';
+import { useRouter } from 'next/router';
+import { FiHome } from 'react-icons/fi';
+import { MdOutlineConfirmationNumber } from 'react-icons/md';
+import styles from '@/styles/Home.module.css';
 
 export default function Home() {
   const [events, setEvents] = useState([]);
+  const router = useRouter();
+
+  async function fetchEvents() {
+    const { data, error } = await supabase
+      .from('event_summary')
+      .select('*');
+
+    if (error) {
+      console.error('Error fetching events:', error);
+    } else {
+      setEvents(data);
+    }
+  }
 
   useEffect(() => {
-    async function fetchEvents() {
-      const { data, error } = await supabase.from('event_summary').select('event_name');
-      if (error) {
-        console.error('Error fetching events:', error);
-      } else {
-        const uniqueEvents = [...new Map(data.map(item => [item['event_name'], item])).values()];
-        setEvents(uniqueEvents);
-      }
-    }
-
     fetchEvents();
   }, []);
 
+  const formatCurrency = (value) => `£ ${Number(value).toLocaleString()}`;
+  const formatATP = (value) => `£${Number(value).toFixed(2)}`;
+
   return (
     <div>
-      <h1>Event Dashboard</h1>
-      <p>Select an event to view reports.</p>
-      <div className="card-container">
-        {events.map((event) => (
-          <Link key={event.event_name} href={`/events/${encodeURIComponent(event.event_name)}`} className="card">
-              <h3>{event.event_name}</h3>
-          </Link>
+      <div className={styles.headerContainer}>
+        <div>
+          <h1 className={styles.header}>Company Overview</h1>
+          <p className={styles.subheader}>A summary of all concert sales and event data.</p>
+        </div>
+      </div>
+
+      <div className={styles.grid}>
+        {/* Static Company Overview Card */}
+        <div className={styles.overviewCard} onClick={() => router.push('/')}>
+            <div className={styles.overviewIcon}><FiHome /></div>
+            <h2 className={styles.overviewTitle}>Company Overview</h2>
+            <p className={styles.overviewSubtitle}>REPORT</p>
+            <button className={styles.button}>View Dashboard</button>
+        </div>
+
+        {/* Dynamic Event Cards */}
+        {events.map(event => (
+          <div key={event.event_name} className={styles.card} onClick={() => router.push(`/events/${event.event_name}`)}>
+            <h3 className={styles.eventTitle}>{event.event_name}</h3>
+            <p className={styles.eventSubtitle}>CONCERT</p>
+
+            <div style={{ fontSize: '24px', fontWeight: 'bold', margin: '20px 0' }}>
+              {formatCurrency(event.total_gross_value)}
+            </div>
+
+            <div className={styles.eventData}>
+                <MdOutlineConfirmationNumber className={styles.eventDataIcon} />
+                <span className={styles.eventValues}>{formatATP(event.average_ticket_price)}</span>
+            </div>
+            
+            <button className={styles.button}>View Dashboard</button>
+          </div>
         ))}
       </div>
-      <style jsx>{`
-        .card-container {
-          display: flex;
-          flex-wrap: wrap;
-          gap: 20px;
-          margin-top: 20px;
-        }
-        .card {
-          border: 1px solid #ddd;
-          border-radius: 8px;
-          padding: 20px;
-          text-align: center;
-          text-decoration: none;
-          color: inherit;
-          transition: box-shadow 0.3s ease;
-          min-width: 200px;
-          box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-          cursor: pointer;
-        }
-        .card:hover {
-          box-shadow: 0 4px 10px rgba(0,0,0,0.15);
-        }
-        .card h3 {
-          margin: 0;
-          font-size: 1.2rem;
-        }
-        h1 {
-            margin-bottom: 0.5rem;
-        }
-        p {
-            margin-bottom: 1.5rem;
-        }
-      `}</style>
     </div>
   );
 }

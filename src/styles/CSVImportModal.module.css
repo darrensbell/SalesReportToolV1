@@ -1,0 +1,107 @@
+
+.modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.75);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.modalContent {
+  background: #2c2c2c; /* Dark background for the modal */
+  padding: 30px;
+  border-radius: 8px;
+  width: 500px;
+  max-width: 90%;
+  color: #fff; /* White text */
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+  text-align: center;
+}
+
+.modalTitle {
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 20px;
+}
+
+.fileInput {
+  display: none; /* Hide the default file input */
+}
+
+.fileInputLabel {
+  display: inline-block;
+  padding: 12px 20px;
+  background-color: #5a67d8; /* A nice blue for the button */
+  color: white;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-bottom: 20px;
+  transition: background-color 0.3s;
+}
+
+.fileInputLabel:hover {
+  background-color: #434190;
+}
+
+.fileName {
+  margin-bottom: 20px;
+  color: #ccc;
+}
+
+.buttonContainer {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+}
+
+.button {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.3s;
+}
+
+.importButton {
+  background-color: #38a169; /* Green for import */
+  color: white;
+}
+
+.importButton:hover {
+  background-color: #2f855a;
+}
+
+.importButton:disabled {
+  background-color: #4a5568; /* Gray when disabled */
+  cursor: not-allowed;
+}
+
+.closeButton {
+  background-color: #e53e3e; /* Red for close */
+  color: white;
+}
+
+.closeButton:hover {
+  background-color: #c53030;
+}
+
+.notification {
+  margin-top: 20px;
+  padding: 10px;
+  border-radius: 5px;
+}
+
+.success {
+  background-color: #38a169;
+  color: white;
+}
+
+.error {
+  background-color: #e53e3e;
+  color: white;
+}

@@ -1,0 +1,18 @@
+
+body {
+  background-color: #1A1A2E; /* Fallback for browsers that don't support gradients */
+  background-image: radial-gradient(circle, #161625, #1A1A2E);
+  color: #e2e8f0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
