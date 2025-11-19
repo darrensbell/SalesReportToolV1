@@ -27,10 +27,11 @@ export default function SalesStats() {
   }, []);
 
   const formatGross = (gross) => {
-    if (gross >= 1000) {
-      return `£${(gross / 1000).toFixed(0)}k`;
+    const roundedGross = Math.round(gross);
+    if (roundedGross >= 100000) {
+      return `£${Math.round(roundedGross / 1000)}k`;
     }
-    return `£${gross}`;
+    return `£${roundedGross.toLocaleString('en-GB')}`;
   };
 
   if (loading) {
@@ -48,11 +49,15 @@ export default function SalesStats() {
         <div className={styles.salesRow}>
           <div className={styles.salesMetric}>
             <span className={styles.salesLabel}>Gross:</span>
-            <span className={styles.salesValue}>{formatGross(stats.totalSales.gross)}</span>
+            <span className={styles.salesValue}>
+              {formatGross(stats.totalSales.gross)}
+            </span>
           </div>
           <div className={styles.salesMetric}>
             <span className={styles.salesLabel}>Tickets Sold:</span>
-            <span className={styles.salesValue}>{stats.totalSales.sold}</span>
+            <span className={styles.salesValue}>
+              {stats.totalSales.sold.toLocaleString('en-GB')}
+            </span>
           </div>
         </div>
       </div>
@@ -61,11 +66,15 @@ export default function SalesStats() {
         <div className={styles.salesRow}>
           <div className={styles.salesMetric}>
             <span className={styles.salesLabel}>Gross:</span>
-            <span className={styles.salesValue}>{formatGross(stats.yesterdaySales.gross)}</span>
+            <span className={styles.salesValue}>
+              {formatGross(stats.yesterdaySales.gross)}
+            </span>
           </div>
           <div className={styles.salesMetric}>
             <span className={styles.salesLabel}>Tickets Sold:</span>
-            <span className={styles.salesValue}>{stats.yesterdaySales.sold}</span>
+            <span className={styles.salesValue}>
+              {stats.yesterdaySales.sold.toLocaleString('en-GB')}
+            </span>
           </div>
         </div>
       </div>

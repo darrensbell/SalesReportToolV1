@@ -1,32 +1,34 @@
 import { useRouter } from 'next/router'
 import { useState, useEffect } from 'react'
 import { supabase } from '../../lib/supabaseClient'
-import { FiTrendingUp, FiUsers, FiCalendar } from 'react-icons/fi'
-import { FaPoundSign } from 'react-icons/fa'
-import { MdOutlineConfirmationNumber } from 'react-icons/md'
 import styles from '../../styles/Event.module.css'
-
-const StatCard = ({ title, value, subtext, icon }) => (
-  <div className={styles.card}>
-    <div className={styles.cardHeader}>
-      <h4 className={styles.cardTitle}>{title}</h4>
-      <span className={styles.cardIcon}>{icon}</span>
-    </div>
-    <p className={styles.cardValue}>{value}</p>
-    <p className={styles.cardSubtext}>{subtext}</p>
-  </div>
-)
+import StatsTab from '../../components/StatsTab'
+import ChartsTab from '../../components/ChartsTab'
+import AiDeepDiveTab from '../../components/AiDeepDiveTab'
+import {
+  getDailySalesData,
+  getPerformanceComparisonData,
+  getSalesByPriceTierData,
+  getAverageTicketPriceData,
+} from '../../lib/chartData'
 
 export default function EventDashboard() {
   const router = useRouter()
   const { event_name } = router.query
   const [eventData, setEventData] = useState(null)
+  const [showData, setShowData] = useState(null)
   const [lastDayStats, setLastDayStats] = useState({
     gross: 0,
     tickets: 0,
     atp: 0,
   })
   const [activeTab, setActiveTab] = useState('Stats')
+  const [chartData, setChartData] = useState({
+    dailySales: [],
+    performanceComparison: [],
+    salesByPriceTier: [],
+    averageTicketPrice: [],
+  })
 
   useEffect(() => {
     if (!event_name) return
@@ -42,6 +44,20 @@ export default function EventDashboard() {
         console.error('Error fetching event data:', error)
       } else {
         setEventData(data)
+      }
+    }
+
+    async function fetchShowData() {
+      const { data, error } = await supabase
+        .from('shows')
+        .select('ticket_qty_available')
+        .eq('event_name', event_name)
+
+      if (error) {
+        console.error('Error fetching show data:', error)
+      } else if (data) {
+        const totalCapacity = data.reduce((acc, cur) => acc + cur.ticket_qty_available, 0)
+        setShowData({ ticket_qty_available: totalCapacity })
       }
     }
 
@@ -73,12 +89,37 @@ export default function EventDashboard() {
       }
     }
 
+    async function fetchChartData() {
+      try {
+        const [dailySales, performanceComparison, salesByPriceTier, averageTicketPrice] = await Promise.all([
+          getDailySalesData(event_name),
+          getPerformanceComparisonData(event_name),
+          getSalesByPriceTierData(event_name),
+          getAverageTicketPriceData(event_name),
+        ])
+        setChartData({ dailySales, performanceComparison, salesByPriceTier, averageTicketPrice })
+      } catch (error) {
+        console.error('Error fetching chart data:', error)
+      }
+    }
+
     fetchEventData()
+    fetchShowData()
     fetchLastDaySales()
+    fetchChartData()
   }, [event_name])
 
-  if (!eventData) {
-    return <div>Loading...</div>
+  const renderTabContent = () => {
+    switch (activeTab) {
+      case 'Stats':
+        return <StatsTab eventData={eventData} showData={showData} lastDayStats={lastDayStats} />
+      case 'Charts':
+        return <ChartsTab eventName={event_name} chartData={chartData} />
+      case 'AI Deep Dive':
+        return <AiDeepDiveTab />
+      default:
+        return null
+    }
   }
 
   return (
@@ -98,61 +139,8 @@ export default function EventDashboard() {
           </button>
         ))}
       </div>
-      <div className={styles.grid}>
-        <StatCard
-          title="Total Box Office"
-          value={`£${Number(eventData.total_gross_value).toLocaleString()}`}
-          subtext="Lifetime Total"
-          icon={<FaPoundSign />}
-        />
-        <StatCard
-          title="Total Tickets Sold"
-          value={eventData.total_tickets_sold}
-          subtext="Lifetime Total"
-          icon={<MdOutlineConfirmationNumber />}
-        />
-        <StatCard
-          title="% Occupancy"
-          value={`${(eventData.total_occupancy * 100).toFixed(1)}%`}
-          subtext="Based on capacity"
-          icon={<FiTrendingUp />}
-        />
-        <StatCard
-          title="Overall ATP"
-          value={`£${Number(eventData.average_ticket_price).toFixed(2)}`}
-          subtext="Avg. Ticket Price"
-          icon={<FaPoundSign />}
-        />
-        <StatCard
-          title="Tickets Remaining"
-          value={eventData.tickets_remaining}
-          subtext="Across all shows"
-          icon={<FiUsers />}
-        />
-        <StatCard
-          title="Days to Performance"
-          value="124"
-          subtext="Until first show"
-          icon={<FiCalendar />}
-        />
-        <StatCard
-          title="Last Day Gross"
-          value={`£${lastDayStats.gross.toLocaleString()}`}
-          subtext="Yesterday's Sales"
-          icon={<FaPoundSign />}
-        />
-        <StatCard
-          title="Last Day Tickets"
-          value={lastDayStats.tickets}
-          subtext="Yesterday's Sales"
-          icon={<MdOutlineConfirmationNumber />}
-        />
-        <StatCard
-          title="Last Day ATP"
-          value={`£${lastDayStats.atp.toFixed(2)}`}
-          subtext="Yesterday's Sales"
-          icon={<FaPoundSign />}
-        />
+      <div className={styles.tabContent}>
+        {renderTabContent()}
       </div>
     </div>
   )

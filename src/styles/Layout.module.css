@@ -104,13 +104,28 @@
   border-top: 1px solid #334155;
 }
 
-.connectedDot {
+.statusIndicator svg {
+  margin-right: 8px;
+}
+
+.dot {
   display: inline-block;
   width: 8px;
   height: 8px;
   border-radius: 50%;
-  background-color: #22c55e;
   margin-right: 8px;
+}
+
+.connectedDot {
+  background-color: #22c55e;
+}
+
+.disconnectedDot {
+  background-color: #ef4444;
+}
+
+.versionInfo {
+  padding-top: 10px;
 }
 
 .version {

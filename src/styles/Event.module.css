@@ -10,23 +10,32 @@
 
 .tabsContainer {
   display: flex;
-  margin-bottom: 30px;
+  border-bottom: 1px solid #334155;
 }
 
 .tab {
   background: transparent;
-  border: 1px solid #334155;
+  border: none;
   color: #94a3b8;
   padding: 10px 20px;
-  margin-right: 10px;
-  border-radius: 8px;
   cursor: pointer;
-  font-size: 14px;
+  font-size: 16px;
+  margin-right: 20px;
+  border-bottom: 2px solid transparent;
+  transition: color 0.3s ease, border-bottom 0.3s ease;
+}
+
+.tab:hover {
+  color: #e2e8f0;
 }
 
 .activeTab {
-  background-color: #334155;
   color: #e2e8f0;
+  border-bottom: 2px solid #dc2626;
+}
+
+.tabContent {
+  padding-top: 30px;
 }
 
 .grid {
@@ -75,4 +84,15 @@
   color: #a3d8ce;
   margin: 0;
   margin-top: auto;
+}
+
+.comingSoon {
+  text-align: center;
+  padding: 50px;
+  color: #94a3b8;
+}
+
+.comingSoon h2 {
+  font-size: 24px;
+  margin-bottom: 10px;
 }
