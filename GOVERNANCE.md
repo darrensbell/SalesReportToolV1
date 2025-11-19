@@ -1,239 +1,124 @@
-GOVERNANCE_PRIME_AI_LAW — UNIVERSAL FRAMEWORK v1
-
-Status: Binding
+GOVERNANCE PRIME AI LAW
+AI Operational Framework v4
 Owner: Darren Bell
-Effective date: 11 Nov 2025
+Effective date: 19 Nov 2025
+Status: Binding for AI systems only
 
 Purpose
-
-This document governs all technical, architectural, and operational activity within the designated repository. It defines the laws of structure, execution, and authorship for human and AI contributors. Non-compliance invalidates resulting work.
-
-The goal is deterministic modularity. Every function, component, or process must exist within a defined folder, serve a singular purpose, and interact through clear, auditable interfaces.
-
-All changes must preserve clarity, traceability, and reversibility.
-
-⸻
+This file governs the behaviour of AI systems inside this repository. It sets strict limits for AI generated edits, file creation, structure, and refactors. Humans are not restricted. Humans may create, move, rename, or delete anything. The AI must remain deterministic, safe, and controlled at all times.
 
 Authority
-• Only written instructions from Darren Bell authorise structural change.
-• No assumption, inference, or contextual correction may override a written command.
-• Ambiguity means stop, surface the ambiguity, await instruction.
-• Any output created without explicit instruction or in breach of these laws is non-binding.
+Only written instructions from Darren Bell override this file.
+If an instruction is unclear, the AI must stop and request clarification.
+The AI must not act on inference.
 
-⸻
+Scope
+These rules apply only to AI driven changes.
+Human developers work without restriction.
+AI must never block or alter human GitHub or Firebase actions.
 
-Scope and non-deviation
-• Operate only inside the current repository and its declared workspace.
-• Do not create, rename, or delete top-level resources without written approval.
-• Do not alter configurations, environment files, or infrastructure without instruction.
-• All logic and state management must remain modular and self-contained within its defined layer.
+Folder structure
+AI must respect the established structure.
 
-src/
-pages/ # Route or view-level components only
-components/ # Reusable UI or logic units
-services/ # Data access, I/O, or external integrations
-utils/ # Pure functions and stateless helpers
-styles/ # Global and modular CSS
+src
+pages
+components
+services
+utils
+styles
 
-Rules
-• Subfolders are mandatory. No loose files in src/.
-• Each folder defines its own scope, and no scope may reach upward or sideways in violation of import boundaries.
-• After any change, perform a path audit to confirm all references are valid.
+Pages contain route level code.
+Components contain reusable UI or logic units.
+Services contain data access and integration code.
+Utils contain pure helpers with no state.
+Styles contains global styles and module styles.
 
-⸻
+AI structural rules
+AI must not place loose files into src.
+AI must not import across boundaries in a way that breaks the structure.
+AI must keep utils pure and side effect free.
+AI must not create cross component global styling.
 
-Subfolder conventions
+AI file size caps
+These caps apply only to AI generated or AI edited files.
 
-src/pages
-Purpose: Entry points, routes, or view composition.
-• One folder per route or logical view.
-• Entry file named index.(jsx|tsx).
-• Optional subfolders: parts/, hooks/, Controller.tsx.
-• No direct network, file system, or service access.
-• Data flows in via props or state managers imported from services.
+Pages or components must not exceed 250 lines.
+Hooks or utils must not exceed 200 lines.
+Service files must not exceed 300 lines.
+CSS modules must not exceed 150 lines.
 
-src/components
-Purpose: Reusable interface or logic blocks.
-• One folder per component.
-• Folder contains index.(tsx|jsx), tests, and local style file.
-• Accept data and configuration via props only.
-• Contain only UI or logic strictly relevant to presentation.
+If the AI is instructed to edit a file that already exceeds its cap, the AI must announce this but continue only if the user approves.
 
-src/services
-Purpose: Data handling, I/O, and integration boundaries.
-• One folder per domain or integration (e.g., users/, analytics/, auth/).
-• Contain only non-UI operations such as API calls, caching, storage, or computation.
-• Return typed, predictable outputs.
+AI splitting rule
+When an AI edited file approaches or exceeds its limit:
+	1.	Stop and announce that modularisation is required.
+	2.	Propose a clean split with clear naming and placement.
+	3.	Wait for written approval.
+	4.	After approval, create the new file or folder.
+	5.	Move only the relevant code.
+	6.	Update import paths without rewriting unrelated code.
+	7.	Confirm validity and report completion.
 
-src/utils
-Purpose: Stateless pure helpers.
-• No imports from pages/, components/, or services/.
-• No side-effects, no I/O.
-• Organise by topic folder: dates/, strings/, math/, etc.
+Humans may split files freely without AI restrictions.
 
-src/styles
-Purpose: Styling and theming.
-• Only one global.css file permitted.
-• Component styles live as \*.module.css alongside their component.
-• No cross-component or ad-hoc global styles.
+AI edit protocol
+Before editing any file, the AI must confirm:
 
-⸻
+The file exists.
+The edit is explicitly requested.
+The file is not frozen.
 
-Naming and file rules
-• PascalCase for component and folder names exporting components.
-• camelCase for functions, utilities, and service files.
-• Hooks must begin with use* and live in a hooks/ folder or beside their consumer.
-• Index files may only export a single component or defined public API.
-• Test files must follow *.test.(ts|tsx) convention.
-• Generic names (final.tsx, temp.js, etc.) are invalid.
+During editing, the AI must:
 
-⸻
+Modify only the requested lines or sections.
+Avoid changing formatting, imports, or unrelated content.
+Avoid refactoring unless instructed.
 
-File size caps (mandatory)
-• Page or component files: max 250 lines
-• Hook or utility files: max 200 lines
-• Service files: max 300 lines
-• CSS modules: max 150 lines
-Exceeding these limits invalidates the file until modularised.
+After editing, the AI must:
 
-Splitting rule
-When a file nears its limit: 1. Halt execution. 2. Announce that modularisation is required. 3. Propose a clean, named split. 4. Apply the split, update imports, verify functionality.
+Validate syntax.
+Validate paths.
+Report completion.
 
-⸻
+Frozen files
+Darren Bell may declare any file or folder frozen.
+The AI must not modify frozen resources without explicit permission.
+Frozen resources are listed in LOCKED_COMPONENTS.md.
 
-Refactor and migration protocol
+AI behaviour around Git
+AI must not create branches, merges, tags, or commits unless asked.
+AI must not modify commit history.
+AI must not interfere with human version control at any stage.
 
-A no-delete migration posture is enforced. The default path is move and adapt, not remove. 1. Plan — Define new locations and expected path changes. 2. Create destination — Make subfolders and placeholder index files first. 3. Move, don’t delete — Keep thin re-export shims until validated. 4. Amend, don’t rewrite — Adjust only what’s necessary for relocation. 5. Update imports — Replace all path references project-wide. 6. Audit paths — Confirm no stale imports remain. 7. Build, typecheck, lint — Must pass cleanly. 8. Runtime smoke test — App must launch without console errors. 9. Deprecation window — Maintain shims until written approval to remove. 10. Removal — Only with explicit written confirmation.
+AI behaviour in Firebase
+AI must follow Firebase instructions exactly.
+AI must not alter Firebase project settings unless instructed.
+AI must not block file creation, deletions, or updates requested by the user.
+AI must not override human deploy tasks.
 
-⸻
-
-Dependency direction
-• Pages → Components, Services, Utils
-• Components → Utils
-• Services → Utils
-• Utils → nothing outside Utils
-Circular dependencies are prohibited.
-
-⸻
+Secrets
+AI must not output values of secrets.
+AI must not store secrets outside approved environment files.
+AI must not modify environment files unless instructed.
 
 Import boundaries
-• Pages may import from services, components, and utils.
-• Components cannot import from services or perform direct I/O.
-• Utilities cannot import from any of the above.
-• CSS modules are imported only by their paired component or page.
+Pages may import from components, services, and utils.
+Components may import from utils.
+Services may import from utils.
+Utils may not import from pages, components, or services.
 
-⸻
+Error handling rules
+AI must surface all errors immediately.
+AI must not attempt automatic fixes unless instructed.
+AI must stop when uncertain.
 
-Styling rules
-• All global styles live in styles/global.css.
-• Each component maintains its own local \*.module.css.
-• Cross-component styling is forbidden.
-
-⸻
-
-Logging and error handling
-• Centralise logging utilities in utils/logging/.
-• Services handle and throw errors; pages render and display them.
-• Components remain presentational.
-• All unexpected errors must be surfaced, not silently absorbed.
-
-⸻
-
-Versioning and change control
-• Every configuration or logic change must be committed via Pull Request with a clear version header.
-• PRs must pass build, lint, and test checks.
-• No auto-merging, silent commits, or skipped code reviews.
-• Update REFACTOR_LOG.md for each structural change, detailing old and new paths.
-• Maintain concise and factual notes.
-
-⸻
-
-Commit checklist
-
-All must be true before merge:
-• Imports fully updated
-• No direct service or I/O calls from components
-• Build, typecheck, and lint pass cleanly
-• Path audit completed and logged
-• Runtime smoke test passed
-• Re-export shims annotated @deprecated
-• REFACTOR_LOG.md updated
-
-⸻
-
-Execution governance
-• On any failure, halt immediately and surface the precise error message.
-• No silent fixes, retries, or inference.
-• No autonomous correction of prior work without written re-authorisation.
-• Tasks end deterministically once complete.
-
-⸻
-
-Security and secrets
-• Secrets must exist only in environment files (.env.local, .env.production).
-• No inline credentials or tokens.
-• Use least-privilege access always.
-
-⸻
-
-Auditability
-• All automated actions must log to ai_activity.log.
-• Format: {timestamp} | {actor} | {action} | {target} | {result}.
-• Logs must persist a minimum of ninety days and be immutable.
-
-⸻
-
-Default failsafe
-
-If uncertain, halt execution and request explicit instruction. No assumptions, no self-healing, no extrapolation.
-
-⸻
-
-Change Management Law — Comprehensive Implementation 1. Impact analysis first — Identify all dependants before modifying anything. 2. Atomic execution — Apply related changes as a single atomic operation. 3. Verification before report — Confirm stability and zero errors before declaring completion.
-
-⸻
-
-Quality and consistency laws
-• Law of Correctness: All output must be syntactically valid, properly indented, and logically sound.
-• Law of Consistency: Names, imports, and casing must match declared project standards.
-• Law of Persistence: Maintain accurate awareness of file locations and versions during all tasks.
-• Law of Non-recursion: Never self-trigger edits or repeat operations autonomously.
-• Law of Immutable output: Once verified, code cannot be revised without written instruction.
-• Law of Structural priority: Functionality takes precedence over aesthetic refactor.
-• Law of Deterministic completion: Every operation must end in a finalised state.
-
-⸻
-
-Language and formatting
-• Use exact spelling, syntax, and casing of existing files.
-• Respect indentation and line breaks.
-• No automatic re-formatting of JSON, SQL, or JSX.
-• Maintain UTF-8 encoding.
-• Enforce a single trailing newline at file end.
-• No typographic substitutions or smart quotes.
-
-⸻
-
-Operational sanity clause — precedence
-
-If conflict arises: 1. Written instruction from Darren Bell 2. Law of Correctness 3. Law of Consistency 4. Law of Non-recursion 5. All other clauses
-
-⸻
-
-Critical component lockdown
-
-Certain components or modules may be declared frozen. They may not be edited without explicit written override from Darren Bell.
-
-Frozen components are defined in LOCKED_COMPONENTS.md.
-
-⸻
+Failsafe priority
+When conflict arises:
+	1.	Written instruction from Darren Bell
+	2.	This governance file
+	3.	Project structural rules
 
 Enforcement
-• Any non-conforming PR is rejected.
-• Repeated breaches trigger rollback to last valid commit.
-• Any detected violation invalidates the output until corrected.
-• The AI or contributor must surface any suspected breach immediately and halt pending review.
-
-⸻
-
-This law is the binding framework for modular, deterministic, and reversible code development across all future applications under Darren Bell’s authority.
+Any AI action that breaches these rules is invalid.
+The AI must halt and request instruction.
+Human code remains authoritative.

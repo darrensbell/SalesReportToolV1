@@ -1,7 +1,7 @@
 import useSWR from 'swr';
 import { supabase } from '../lib/supabaseClient';
 
-const fetcher = async (url, eventName) => {
+export const fetcher = async (url, eventName) => {
   const { data, error } = await supabase
     .from('event_summary')
     .select('*')

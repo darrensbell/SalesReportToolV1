@@ -8,10 +8,11 @@ import { useDatabaseStatus } from '@/hooks/useDatabaseStatus';
 
 export default function Layout({ children, version }) {
   const router = useRouter();
-  const [currentDateTime, setCurrentDateTime] = useState(new Date());
+  const [currentDateTime, setCurrentDateTime] = useState(null);
   const { status } = useDatabaseStatus();
 
   useEffect(() => {
+    setCurrentDateTime(new Date());
     const timer = setInterval(() => {
       setCurrentDateTime(new Date());
     }, 1000);
@@ -77,7 +78,7 @@ export default function Layout({ children, version }) {
             {status}
           </div>
           <div className={styles.versionInfo}>
-            <p>{formatDateTime(currentDateTime)}</p>
+            {currentDateTime ? <p>{formatDateTime(currentDateTime)}</p> : <p>&nbsp;</p>}
             <p className={styles.version}>v{version}</p>
           </div>
         </div>

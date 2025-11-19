@@ -1,10 +1,10 @@
-import useSWR from 'swr';
+import useSWR, { useSWRConfig } from 'swr';
 import { useRouter } from 'next/router';
 import { FiHome } from 'react-icons/fi';
 import { MdOutlineConfirmationNumber } from 'react-icons/md';
 import styles from '@/styles/Home.module.css';
 import { supabase } from '@/lib/supabaseClient';
-import { useEvent } from '@/hooks/useEvent'; // Import the new hook
+import { fetcher as eventFetcher } from '@/hooks/useEvent';
 
 const fetcher = async (url) => {
   const { data, error } = await supabase.from('event_summary').select('*');
@@ -15,12 +15,11 @@ const fetcher = async (url) => {
 export default function Home() {
   const { data: events, error } = useSWR('/api/events', fetcher);
   const router = useRouter();
+  const { mutate } = useSWRConfig();
 
-  // A function to pre-fetch the event data
   const prefetchEvent = (eventName) => {
-    // The useEvent hook will be called with the eventName, which triggers a fetch.
-    // The data is then stored in the SWR cache.
-    useEvent(eventName);
+    const key = ['/api/events', eventName];
+    mutate(key, eventFetcher(key[0], key[1]), false);
   };
 
   const formatCurrency = (value) => `£ ${Number(value).toLocaleString()}`;
@@ -41,7 +40,6 @@ export default function Home() {
       </div>
 
       <div className={styles.grid}>
-        {/* Static Company Overview Card */}
         <div className={styles.overviewCard} onClick={() => router.push('/')}>
           <div className={styles.overviewIcon}>
             <FiHome />
@@ -51,13 +49,12 @@ export default function Home() {
           <button className={styles.button}>View Dashboard</button>
         </div>
 
-        {/* Dynamic Event Cards */}
         {events.map((event) => (
           <div
             key={event.event_name}
             className={styles.card}
             onClick={() => router.push(`/events/${event.event_name}`)}
-            onMouseEnter={() => prefetchEvent(event.event_name)} // Pre-fetch on hover
+            onMouseEnter={() => prefetchEvent(event.event_name)}
           >
             <h3 className={styles.eventTitle}>{event.event_name}</h3>
             <p className={styles.eventSubtitle}>CONCERT</p>
