@@ -104,13 +104,27 @@
   border-top: 1px solid #334155;
 }
 
-.connectedDot {
-  display: inline-block;
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background-color: #22c55e;
+.statusIcon {
   margin-right: 8px;
+  font-size: 16px;
+}
+
+.connected {
+  color: #22c55e;
+}
+
+.notConnected {
+  color: #ef4444;
+}
+
+.updating {
+  color: #f59e0b;
+  animation: blink 1s infinite;
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
 }
 
 .version {

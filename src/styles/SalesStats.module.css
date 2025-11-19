@@ -1,0 +1,48 @@
+.salesSummary {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.salesBlock {
+  background-color: #2d3748; /* Corresponds to gray.800 */
+  padding: 1rem; /* p-4 */
+  border-radius: 0.5rem; /* rounded-lg */
+}
+
+.salesBlockTitle {
+  font-size: 0.875rem; /* text-sm */
+  font-weight: 500; /* font-medium */
+  color: #a0aec0; /* Corresponds to gray.400 */
+  margin-bottom: 0.5rem; /* mb-2 */
+}
+
+.salesRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+}
+
+.salesMetric {
+  display: flex;
+  flex-direction: column;
+}
+
+.salesLabel {
+  font-size: 0.75rem; /* text-xs */
+  color: #a0aec0; /* Corresponds to gray.400 */
+}
+
+.salesValue {
+  font-size: 1.5rem; /* text-2xl */
+  font-weight: 700; /* font-bold */
+  color: #ffffff; /* text-white */
+}
+
+.ticketsSold {
+  font-size: 1.25rem; /* text-xl */
+  font-weight: 700; /* font-bold */
+  color: #ffffff; /* text-white */
+  text-align: right;
+}

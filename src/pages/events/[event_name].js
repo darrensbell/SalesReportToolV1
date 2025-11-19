@@ -1,10 +1,11 @@
-import { useRouter } from 'next/router'
-import { useState, useEffect } from 'react'
-import { supabase } from '../../lib/supabaseClient'
-import { FiTrendingUp, FiUsers, FiCalendar } from 'react-icons/fi'
-import { FaPoundSign } from 'react-icons/fa'
-import { MdOutlineConfirmationNumber } from 'react-icons/md'
-import styles from '../../styles/Event.module.css'
+import { useRouter } from 'next/router';
+import { useState } from 'react';
+import { FiTrendingUp, FiUsers, FiCalendar } from 'react-icons/fi';
+import { FaPoundSign } from 'react-icons/fa';
+import { MdOutlineConfirmationNumber } from 'react-icons/md';
+import styles from '../../styles/Event.module.css';
+import { useEvent } from '../../hooks/useEvent';
+import { useLastDayStats } from '../../hooks/useLastDayStats';
 
 const StatCard = ({ title, value, subtext, icon }) => (
   <div className={styles.card}>
@@ -15,70 +16,23 @@ const StatCard = ({ title, value, subtext, icon }) => (
     <p className={styles.cardValue}>{value}</p>
     <p className={styles.cardSubtext}>{subtext}</p>
   </div>
-)
+);
 
 export default function EventDashboard() {
-  const router = useRouter()
-  const { event_name } = router.query
-  const [eventData, setEventData] = useState(null)
-  const [lastDayStats, setLastDayStats] = useState({
-    gross: 0,
-    tickets: 0,
-    atp: 0,
-  })
-  const [activeTab, setActiveTab] = useState('Stats')
+  const router = useRouter();
+  const { event_name } = router.query;
+  const [activeTab, setActiveTab] = useState('Stats');
 
-  useEffect(() => {
-    if (!event_name) return
+  // Use the custom hooks to fetch data
+  const { data: eventData, error: eventError, isLoading: eventIsLoading } = useEvent(event_name);
+  const { data: lastDayStats, error: statsError, isLoading: statsIsLoading } = useLastDayStats(event_name);
 
-    async function fetchEventData() {
-      const { data, error } = await supabase
-        .from('event_summary')
-        .select('*')
-        .eq('event_name', event_name)
-        .single()
+  if (eventIsLoading || statsIsLoading) {
+    return <div>Loading...</div>;
+  }
 
-      if (error) {
-        console.error('Error fetching event data:', error)
-      } else {
-        setEventData(data)
-      }
-    }
-
-    async function fetchLastDaySales() {
-      const today = new Date()
-      today.setHours(0, 0, 0, 0)
-
-      const yesterday = new Date()
-      yesterday.setDate(yesterday.getDate() - 1)
-      yesterday.setHours(0, 0, 0, 0)
-
-      const todayISO = today.toISOString()
-      const yesterdayISO = yesterday.toISOString()
-
-      const { data, error } = await supabase
-        .from('sales')
-        .select('sold_gross_value, sold_tickets')
-        .eq('event_name', event_name)
-        .gte('transaction_date', yesterdayISO)
-        .lt('transaction_date', todayISO)
-
-      if (error) {
-        console.error('Error fetching last day sales:', error)
-      } else {
-        const gross = data.reduce((acc, cur) => acc + cur.sold_gross_value, 0)
-        const tickets = data.reduce((acc, cur) => acc + cur.sold_tickets, 0)
-        const atp = tickets > 0 ? gross / tickets : 0
-        setLastDayStats({ gross, tickets, atp })
-      }
-    }
-
-    fetchEventData()
-    fetchLastDaySales()
-  }, [event_name])
-
-  if (!eventData) {
-    return <div>Loading...</div>
+  if (eventError || statsError) {
+    return <div>Error loading data</div>;
   }
 
   return (
@@ -155,5 +109,5 @@ export default function EventDashboard() {
         />
       </div>
     </div>
-  )
+  );
 }

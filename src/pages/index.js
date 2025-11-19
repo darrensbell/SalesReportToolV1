@@ -1,30 +1,33 @@
-import { useState, useEffect } from 'react'
-import { supabase } from '@/lib/supabaseClient'
-import { useRouter } from 'next/router'
-import { FiHome } from 'react-icons/fi'
-import { MdOutlineConfirmationNumber } from 'react-icons/md'
-import styles from '@/styles/Home.module.css'
+import useSWR from 'swr';
+import { useRouter } from 'next/router';
+import { FiHome } from 'react-icons/fi';
+import { MdOutlineConfirmationNumber } from 'react-icons/md';
+import styles from '@/styles/Home.module.css';
+import { supabase } from '@/lib/supabaseClient';
+import { useEvent } from '@/hooks/useEvent'; // Import the new hook
+
+const fetcher = async (url) => {
+  const { data, error } = await supabase.from('event_summary').select('*');
+  if (error) throw new Error(error.message);
+  return data;
+};
 
 export default function Home() {
-  const [events, setEvents] = useState([])
-  const router = useRouter()
+  const { data: events, error } = useSWR('/api/events', fetcher);
+  const router = useRouter();
 
-  async function fetchEvents() {
-    const { data, error } = await supabase.from('event_summary').select('*')
+  // A function to pre-fetch the event data
+  const prefetchEvent = (eventName) => {
+    // The useEvent hook will be called with the eventName, which triggers a fetch.
+    // The data is then stored in the SWR cache.
+    useEvent(eventName);
+  };
 
-    if (error) {
-      console.error('Error fetching events:', error)
-    } else {
-      setEvents(data)
-    }
-  }
+  const formatCurrency = (value) => `£ ${Number(value).toLocaleString()}`;
+  const formatATP = (value) => `£${Number(value).toFixed(2)}`;
 
-  useEffect(() => {
-    fetchEvents()
-  }, [])
-
-  const formatCurrency = (value) => `£ ${Number(value).toLocaleString()}`
-  const formatATP = (value) => `£${Number(value).toFixed(2)}`
+  if (error) return <div>Failed to load events</div>;
+  if (!events) return <div>Loading...</div>;
 
   return (
     <div>
@@ -54,6 +57,7 @@ export default function Home() {
             key={event.event_name}
             className={styles.card}
             onClick={() => router.push(`/events/${event.event_name}`)}
+            onMouseEnter={() => prefetchEvent(event.event_name)} // Pre-fetch on hover
           >
             <h3 className={styles.eventTitle}>{event.event_name}</h3>
             <p className={styles.eventSubtitle}>CONCERT</p>
@@ -76,5 +80,5 @@ export default function Home() {
         ))}
       </div>
     </div>
-  )
+  );
 }
