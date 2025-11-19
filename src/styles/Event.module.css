@@ -1,12 +1,11 @@
-
 .header {
-    font-size: 36px;
-    font-weight: bold;
+  font-size: 36px;
+  font-weight: bold;
 }
 
 .subheader {
-    color: #cbd5e1;
-    margin-bottom: 30px;
+  color: #cbd5e1;
+  margin-bottom: 30px;
 }
 
 .tabsContainer {
@@ -27,7 +26,7 @@
 
 .activeTab {
   background-color: #334155;
-  color: #E2E8F0;
+  color: #e2e8f0;
 }
 
 .grid {
@@ -38,7 +37,7 @@
 
 .card {
   background: #112827;
-  border: 1px solid #164E4A;
+  border: 1px solid #164e4a;
   border-radius: 15px;
   padding: 20px;
   display: flex;
@@ -46,34 +45,34 @@
 }
 
 .cardHeader {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
 }
 
 .cardTitle {
   margin: 0;
   font-size: 14px;
-  color: #A3D8CE;
+  color: #a3d8ce;
   font-weight: 500;
 }
 
 .cardIcon {
-    font-size: 24px;
-    color: #A3D8CE;
+  font-size: 24px;
+  color: #a3d8ce;
 }
 
 .cardValue {
   font-size: 36px;
   font-weight: bold;
   margin: 10px 0;
-  color: #E2E8F0;
+  color: #e2e8f0;
 }
 
 .cardSubtext {
   font-size: 12px;
-  color: #A3D8CE;
+  color: #a3d8ce;
   margin: 0;
   margin-top: auto;
 }

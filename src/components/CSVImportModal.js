@@ -1,116 +1,151 @@
+import { useState } from 'react'
+import Modal from 'react-modal'
+import Papa from 'papaparse'
+import { supabase } from '@/lib/supabaseClient'
+import styles from '@/styles/CSVImportModal.module.css'
 
-import { useState } from 'react';
-import Modal from 'react-modal';
-import Papa from 'papaparse';
-import { supabase } from '@/lib/supabaseClient';
-import styles from '@/styles/CSVImportModal.module.css';
-
-Modal.setAppElement('#__next');
+Modal.setAppElement('#__next')
 
 export default function CSVImportModal({ isOpen, onRequestClose, onImport }) {
-  const [file, setFile] = useState(null);
-  const [fileName, setFileName] = useState('');
-  const [notification, setNotification] = useState({ message: '', type: '' });
+  const [file, setFile] = useState(null)
+  const [fileName, setFileName] = useState('')
+  const [notification, setNotification] = useState({ message: '', type: '' })
 
   const handleFileChange = (e) => {
-    const chosenFile = e.target.files[0];
+    const chosenFile = e.target.files[0]
     if (chosenFile) {
-      setFile(chosenFile);
-      setFileName(chosenFile.name);
-      setNotification({ message: '', type: '' });
+      setFile(chosenFile)
+      setFileName(chosenFile.name)
+      setNotification({ message: '', type: '' })
     }
-  };
+  }
 
   const handleImport = async () => {
     if (!file) {
-      setNotification({ message: 'Please select a file to import.', type: 'error' });
-      return;
+      setNotification({
+        message: 'Please select a file to import.',
+        type: 'error',
+      })
+      return
     }
 
     const headerMapping = {
-        'Transaction Completed Date Time': 'transaction_completed_date_time',
-        'Event Name': 'event_name',
-        'Channel Name': 'channel_name',
-        'Price Band Name': 'price_band_name',
-        'Performance Date Time': 'performance_date_time',
-        'Performance Start Time': 'performance_start_time',
-        'Transaction Completed At': 'transaction_completed_at',
-        'Sold Tickets': 'sold_tickets',
-        'Comp Tickets': 'comp_tickets',
-        'Sold Gross Value': 'sold_gross_value',
-    };
+      'Transaction Completed Date Time': 'transaction_completed_date_time',
+      'Event Name': 'event_name',
+      'Channel Name': 'channel_name',
+      'Price Band Name': 'price_band_name',
+      'Performance Date Time': 'performance_date_time',
+      'Performance Start Time': 'performance_start_time',
+      'Transaction Completed At': 'transaction_completed_at',
+      'Sold Tickets': 'sold_tickets',
+      'Comp Tickets': 'comp_tickets',
+      'Sold Gross Value': 'sold_gross_value',
+    }
 
     Papa.parse(file, {
       header: true,
       skipEmptyLines: true,
       complete: async (results) => {
-        const mappedData = results.data.map(row => {
-          const newRow = {};
+        const mappedData = results.data.map((row) => {
+          const newRow = {}
           for (const key in row) {
             if (headerMapping[key.trim()]) {
-              const value = row[key];
-              newRow[headerMapping[key.trim()]] = value === '' ? null : value;
+              const value = row[key]
+              newRow[headerMapping[key.trim()]] = value === '' ? null : value
             }
           }
           // Derive show_time from performance_start_time
           if (newRow.performance_start_time) {
-              const hour = parseInt(newRow.performance_start_time.split(':')[0], 10);
-              newRow.show_time = hour < 17 ? 'Matinee' : 'Evening';
+            const hour = parseInt(
+              newRow.performance_start_time.split(':')[0],
+              10,
+            )
+            newRow.show_time = hour < 17 ? 'Matinee' : 'Evening'
           } else {
-              newRow.show_time = null;
+            newRow.show_time = null
           }
-          return newRow;
-        });
+          return newRow
+        })
 
-        const filteredData = mappedData.filter(row => Object.values(row).some(val => val !== null && val !== ''));
+        const filteredData = mappedData.filter((row) =>
+          Object.values(row).some((val) => val !== null && val !== ''),
+        )
 
         if (filteredData.length > 0) {
           // Upsert shows, filtering out any that couldn't have a show_time derived
           const showsToUpsert = filteredData
-            .filter(item => item.event_name && item.show_time)
-            .map(item => ({ event_name: item.event_name, show_time: item.show_time }));
+            .filter((item) => item.event_name && item.show_time)
+            .map((item) => ({
+              event_name: item.event_name,
+              show_time: item.show_time,
+            }))
 
-          const uniqueShows = [...new Map(showsToUpsert.map(item => [`${item.event_name}-${item.show_time}`, item])).values()];
+          const uniqueShows = [
+            ...new Map(
+              showsToUpsert.map((item) => [
+                `${item.event_name}-${item.show_time}`,
+                item,
+              ]),
+            ).values(),
+          ]
 
           if (uniqueShows.length > 0) {
-              const { error: showsError } = await supabase.from('shows').upsert(uniqueShows, { onConflict: 'event_name,show_time' });
-              if (showsError) {
-                console.error('Error upserting shows:', showsError);
-                setNotification({ message: `Error upserting shows: ${showsError.message}`, type: 'error' });
-                return;
-              }
+            const { error: showsError } = await supabase
+              .from('shows')
+              .upsert(uniqueShows, { onConflict: 'event_name,show_time' })
+            if (showsError) {
+              console.error('Error upserting shows:', showsError)
+              setNotification({
+                message: `Error upserting shows: ${showsError.message}`,
+                type: 'error',
+              })
+              return
+            }
           }
 
-          const { error } = await supabase.from('sales').insert(filteredData);
+          const { error } = await supabase.from('sales').insert(filteredData)
 
           if (error) {
-            console.error('Error inserting data:', error);
-            setNotification({ message: `Error inserting data: ${error.message}`, type: 'error' });
+            console.error('Error inserting data:', error)
+            setNotification({
+              message: `Error inserting data: ${error.message}`,
+              type: 'error',
+            })
           } else {
-            setNotification({ message: 'Data imported successfully!', type: 'success' });
-            onImport();
+            setNotification({
+              message: 'Data imported successfully!',
+              type: 'success',
+            })
+            onImport()
             setTimeout(() => {
-              onRequestClose();
-              setNotification({ message: '', type: '' });
-            }, 2000);
+              onRequestClose()
+              setNotification({ message: '', type: '' })
+            }, 2000)
           }
         } else {
-          setNotification({ message: 'No data to import. The CSV file may be empty or the headers do not match.', type: 'error' });
+          setNotification({
+            message:
+              'No data to import. The CSV file may be empty or the headers do not match.',
+            type: 'error',
+          })
         }
       },
       error: (error) => {
-        console.error('Error parsing CSV:', error);
-        setNotification({ message: 'Error parsing CSV file. See console for details.', type: 'error' });
-      }
-    });
-  };
+        console.error('Error parsing CSV:', error)
+        setNotification({
+          message: 'Error parsing CSV file. See console for details.',
+          type: 'error',
+        })
+      },
+    })
+  }
 
   const handleClose = () => {
-    setFile(null);
-    setFileName('');
-    setNotification({ message: '', type: '' });
-    onRequestClose();
-  };
+    setFile(null)
+    setFileName('')
+    setNotification({ message: '', type: '' })
+    onRequestClose()
+  }
 
   return (
     <Modal
@@ -131,7 +166,7 @@ export default function CSVImportModal({ isOpen, onRequestClose, onImport }) {
         />
       </label>
       {fileName && <p className={styles.fileName}>{fileName}</p>}
-      
+
       {notification.message && (
         <div className={`${styles.notification} ${styles[notification.type]}`}>
           {notification.message}
@@ -143,15 +178,16 @@ export default function CSVImportModal({ isOpen, onRequestClose, onImport }) {
           onClick={handleImport}
           className={`${styles.button} ${styles.importButton}`}
           disabled={!file}
-        > 
+        >
           Import
         </button>
         <button
           onClick={handleClose}
-          className={`${styles.button} ${styles.closeButton}`}>
+          className={`${styles.button} ${styles.closeButton}`}
+        >
           Close
         </button>
       </div>
     </Modal>
-  );
+  )
 }

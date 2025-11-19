@@ -1,9 +1,10 @@
-
 body {
-  background-color: #1A1A2E; /* Fallback for browsers that don't support gradients */
-  background-image: radial-gradient(circle, #161625, #1A1A2E);
+  background-color: #1a1a2e; /* Fallback for browsers that don't support gradients */
+  background-image: radial-gradient(circle, #161625, #1a1a2e);
   color: #e2e8f0;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  font-family:
+    -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue',
+    Arial, sans-serif;
 }
 
 a {

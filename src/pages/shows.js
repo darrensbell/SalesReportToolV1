@@ -1,34 +1,37 @@
-
-import { useState, useEffect } from 'react';
-import { supabase } from '@/lib/supabaseClient';
-import styles from '@/styles/Shows.module.css';
+import { useState, useEffect } from 'react'
+import { supabase } from '@/lib/supabaseClient'
+import styles from '@/styles/Shows.module.css'
 
 export default function ShowsPage() {
-  const [shows, setShows] = useState([]);
-  const [editingShow, setEditingShow] = useState(null);
-  const [notification, setNotification] = useState({ message: '', type: '' });
+  const [shows, setShows] = useState([])
+  const [editingShow, setEditingShow] = useState(null)
+  const [notification, setNotification] = useState({ message: '', type: '' })
 
   async function fetchShows() {
-    const { data, error } = await supabase.from('shows').select('*').order('event_name').order('show_time');
+    const { data, error } = await supabase
+      .from('shows')
+      .select('*')
+      .order('event_name')
+      .order('show_time')
     if (error) {
-      console.error('Error fetching shows:', error);
-      setNotification({ message: 'Error fetching shows', type: 'error' });
+      console.error('Error fetching shows:', error)
+      setNotification({ message: 'Error fetching shows', type: 'error' })
     } else {
-      setShows(data);
+      setShows(data)
     }
   }
 
   useEffect(() => {
-    fetchShows();
-  }, []);
+    fetchShows()
+  }, [])
 
   const handleEdit = (show) => {
-    setEditingShow({ ...show });
-  };
+    setEditingShow({ ...show })
+  }
 
   const handleCancel = () => {
-    setEditingShow(null);
-  };
+    setEditingShow(null)
+  }
 
   const handleSave = async () => {
     const { error } = await supabase
@@ -38,40 +41,52 @@ export default function ShowsPage() {
         venue_total_capacity: editingShow.venue_total_capacity,
         ticket_qty_available: editingShow.ticket_qty_available,
       })
-      .eq('show_id', editingShow.show_id);
+      .eq('show_id', editingShow.show_id)
 
     if (error) {
-      console.error('Error updating show:', error);
-      setNotification({ message: 'Error updating show', type: 'error' });
+      console.error('Error updating show:', error)
+      setNotification({ message: 'Error updating show', type: 'error' })
     } else {
-      setNotification({ message: 'Show updated successfully', type: 'success' });
-      setEditingShow(null);
-      fetchShows();
+      setNotification({ message: 'Show updated successfully', type: 'success' })
+      setEditingShow(null)
+      fetchShows()
     }
-  };
+  }
 
   const handleSync = async () => {
-    const { error } = await supabase.rpc('upsert_missing_shows');
+    const { error } = await supabase.rpc('upsert_missing_shows')
     if (error) {
-        console.error('Error syncing shows:', error);
-        setNotification({ message: `Error syncing shows: ${error.message}`, type: 'error' });
+      console.error('Error syncing shows:', error)
+      setNotification({
+        message: `Error syncing shows: ${error.message}`,
+        type: 'error',
+      })
     } else {
-        setNotification({ message: 'Shows synced successfully! New shows are highlighted.', type: 'success' });
-        fetchShows();
+      setNotification({
+        message: 'Shows synced successfully! New shows are highlighted.',
+        type: 'success',
+      })
+      fetchShows()
     }
   }
 
   const handleChange = (e, field) => {
-    setEditingShow({ ...editingShow, [field]: e.target.value });
-  };
+    setEditingShow({ ...editingShow, [field]: e.target.value })
+  }
 
   return (
     <div className={styles.container}>
-        <div className={styles.headerContainer}>
-            <h1 className={styles.header}>Manage Shows</h1>
-            <button onClick={handleSync} className={styles.syncButton}>Sync Shows</button>
+      <div className={styles.headerContainer}>
+        <h1 className={styles.header}>Manage Shows</h1>
+        <button onClick={handleSync} className={styles.syncButton}>
+          Sync Shows
+        </button>
+      </div>
+      {notification.message && (
+        <div className={`${styles.notification} ${styles[notification.type]}`}>
+          {notification.message}
         </div>
-      {notification.message && <div className={`${styles.notification} ${styles[notification.type]}`}>{notification.message}</div>}
+      )}
       <div className={styles.tableContainer}>
         <table className={styles.table}>
           <thead>
@@ -86,26 +101,44 @@ export default function ShowsPage() {
           </thead>
           <tbody>
             {shows.map((show) => (
-              <tr key={show.show_id} className={!show.venue_name ? styles.newShow : ''}>
+              <tr
+                key={show.show_id}
+                className={!show.venue_name ? styles.newShow : ''}
+              >
                 <td>{show.event_name}</td>
                 <td>{show.show_time}</td>
                 <td>
                   {editingShow?.show_id === show.show_id ? (
-                    <input type="text" value={editingShow.venue_name || ''} onChange={(e) => handleChange(e, 'venue_name')} className={styles.inputField} />
+                    <input
+                      type="text"
+                      value={editingShow.venue_name || ''}
+                      onChange={(e) => handleChange(e, 'venue_name')}
+                      className={styles.inputField}
+                    />
                   ) : (
                     show.venue_name
                   )}
                 </td>
                 <td>
                   {editingShow?.show_id === show.show_id ? (
-                    <input type="number" value={editingShow.venue_total_capacity || ''} onChange={(e) => handleChange(e, 'venue_total_capacity')} className={styles.inputField} />
+                    <input
+                      type="number"
+                      value={editingShow.venue_total_capacity || ''}
+                      onChange={(e) => handleChange(e, 'venue_total_capacity')}
+                      className={styles.inputField}
+                    />
                   ) : (
                     show.venue_total_capacity
                   )}
                 </td>
                 <td>
                   {editingShow?.show_id === show.show_id ? (
-                    <input type="number" value={editingShow.ticket_qty_available || ''} onChange={(e) => handleChange(e, 'ticket_qty_available')} className={styles.inputField} />
+                    <input
+                      type="number"
+                      value={editingShow.ticket_qty_available || ''}
+                      onChange={(e) => handleChange(e, 'ticket_qty_available')}
+                      className={styles.inputField}
+                    />
                   ) : (
                     show.ticket_qty_available
                   )}
@@ -113,11 +146,26 @@ export default function ShowsPage() {
                 <td>
                   {editingShow?.show_id === show.show_id ? (
                     <>
-                      <button onClick={handleSave} className={styles.saveButton}>Save</button>
-                      <button onClick={handleCancel} className={styles.cancelButton}>Cancel</button>
+                      <button
+                        onClick={handleSave}
+                        className={styles.saveButton}
+                      >
+                        Save
+                      </button>
+                      <button
+                        onClick={handleCancel}
+                        className={styles.cancelButton}
+                      >
+                        Cancel
+                      </button>
                     </>
                   ) : (
-                    <button onClick={() => handleEdit(show)} className={styles.editButton}>Edit</button>
+                    <button
+                      onClick={() => handleEdit(show)}
+                      className={styles.editButton}
+                    >
+                      Edit
+                    </button>
                   )}
                 </td>
               </tr>
@@ -126,5 +174,5 @@ export default function ShowsPage() {
         </table>
       </div>
     </div>
-  );
+  )
 }

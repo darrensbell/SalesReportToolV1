@@ -1,19 +1,18 @@
-
-import { useState } from 'react';
-import CSVImportModal from '../components/CSVImportModal';
-import { useRouter } from 'next/router';
+import { useState } from 'react'
+import CSVImportModal from '../components/CSVImportModal'
+import { useRouter } from 'next/router'
 
 export default function IngestPage() {
-  const [isModalOpen, setIsModalOpen] = useState(true);
-  const router = useRouter();
+  const [isModalOpen, setIsModalOpen] = useState(true)
+  const router = useRouter()
 
   function handleClose() {
-    setIsModalOpen(false);
-    router.push('/');
+    setIsModalOpen(false)
+    router.push('/')
   }
 
   function handleImport() {
-    router.push('/');
+    router.push('/')
   }
 
   return (
@@ -24,5 +23,5 @@ export default function IngestPage() {
         onImport={handleImport}
       />
     </div>
-  );
+  )
 }
