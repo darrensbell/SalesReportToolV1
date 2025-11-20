@@ -44,6 +44,7 @@
   border: 1px solid #334155;
   display: flex;
   flex-direction: column;
+  position: relative; /* For loading overlay */
 }
 
 .chartSection:hover {
@@ -54,27 +55,47 @@
 .chartHeader {
   display: flex;
   justify-content: space-between;
-  align-items: center;
+  align-items: flex-start; /* Align to top */
   margin-bottom: 2rem;
+  flex-wrap: wrap; /* Allow wrapping */
+}
+
+/* === Interactive Controls === */
+.controlsContainer {
+    display: flex;
+    gap: 1.5rem;
+    margin-top: 1rem; /* Space below title */
+}
+
+.controlGroup {
+    display: flex;
+    background-color: #2b3a4f;
+    border-radius: 8px;
+    overflow: hidden;
+    border: 1px solid #4a5a70;
 }
 
 .toggleButton {
-  background-color: #334155;
+  background-color: transparent;
   color: #e2e8f0;
   border: none;
   padding: 10px 15px;
-  border-radius: 6px;
   font-weight: 600;
   cursor: pointer;
   transition: background-color 0.2s ease;
+  border-right: 1px solid #4a5a70;
 }
 
-.toggleButton:hover {
+.controlGroup .toggleButton:last-child {
+    border-right: none;
+}
+
+.toggleButton.active, .toggleButton:hover {
   background-color: #475569;
+  color: #ffffff;
 }
 
-
-/* === Tooltip === */
+/* === Tooltip & Reference Lines === */
 .customTooltip {
   background-color: #2b3a4f;
   border: 1px solid #4a5a70;
@@ -91,7 +112,7 @@
 }
 
 .tooltipValue {
-  margin: 0 0 4px;
+  margin: 4px 0 0;
 }
 
 .referenceLabel {
@@ -100,8 +121,7 @@
     fill: #cbd5e1;
 }
 
-
-/* === Table === */
+/* === Table Styles === */
 .tableContainer {
   max-height: 400px;
   overflow-y: auto;
@@ -136,7 +156,7 @@
   background-color: #253346;
 }
 
-/* === Loading & Error States === */
+/* === States & Overlays === */
 .loading, .error {
   text-align: center;
   padding: 4rem;
@@ -144,16 +164,46 @@
   color: #94a3b8;
 }
 
+.loadingOverlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(30, 41, 59, 0.7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.5rem;
+    color: #e2e8f0;
+    border-radius: 12px;
+    z-index: 10;
+}
+
 /* === Responsive Adjustments === */
 @media (max-width: 1200px) {
     .grid {
         grid-template-columns: 1fr;
     }
+}
+
+@media (max-width: 768px) {
     .chartHeader {
         flex-direction: column;
-        align-items: flex-start;
+        align-items: stretch;
+    }
+    .controlsContainer {
+        flex-direction: column;
+        gap: 1rem;
+        width: 100%;
+    }
+    .controlGroup {
+        justify-content: center;
+    }
+    .overviewTitle {
+        font-size: 2.5rem;
     }
     .chartTitle {
-        margin-bottom: 1rem;
+        text-align: center;
     }
 }
