@@ -1,0 +1,176 @@
+table_name	table_type	column_name	data_type	is_nullable	column_default
+event_summary	VIEW	event_name	text	YES	null
+event_summary	VIEW	total_tickets_sold	bigint	YES	null
+event_summary	VIEW	total_comp_tickets	bigint	YES	null
+event_summary	VIEW	total_gross_value	numeric	YES	null
+event_summary	VIEW	average_ticket_price	numeric	YES	null
+event_summary_by_showtime	VIEW	event_name	text	YES	null
+event_summary_by_showtime	VIEW	show_time	text	YES	null
+event_summary_by_showtime	VIEW	total_tickets_sold	bigint	YES	null
+event_summary_by_showtime	VIEW	total_comp_tickets	bigint	YES	null
+event_summary_by_showtime	VIEW	total_gross_value	numeric	YES	null
+event_summary_by_showtime	VIEW	average_ticket_price	numeric	YES	null
+sales	BASE TABLE	id	bigint	NO	null
+sales	BASE TABLE	transaction_completed_date_time	timestamp with time zone	YES	null
+sales	BASE TABLE	event_name	text	YES	null
+sales	BASE TABLE	channel_name	text	YES	null
+sales	BASE TABLE	price_band_name	text	YES	null
+sales	BASE TABLE	performance_date_time	timestamp with time zone	YES	null
+sales	BASE TABLE	performance_start_time	time without time zone	YES	null
+sales	BASE TABLE	transaction_completed_at	timestamp with time zone	YES	null
+sales	BASE TABLE	sold_tickets	integer	YES	null
+sales	BASE TABLE	comp_tickets	integer	YES	null
+sales	BASE TABLE	sold_gross_value	numeric	YES	null
+sales	BASE TABLE	sales_id	text	NO	null
+sales	BASE TABLE	transaction_date	date	YES	null
+sales	BASE TABLE	performance_date	date	YES	null
+sales	BASE TABLE	show_time	text	YES	null
+sales	BASE TABLE	atp	numeric	YES	null
+sales	BASE TABLE	transaction_dow	text	YES	null
+sales	BASE TABLE	record_created_at	timestamp with time zone	NO	timezone('utc'::text, now())
+sales_14_days_ago	VIEW	id	bigint	YES	null
+sales_14_days_ago	VIEW	transaction_completed_date_time	timestamp with time zone	YES	null
+sales_14_days_ago	VIEW	event_name	text	YES	null
+sales_14_days_ago	VIEW	channel_name	text	YES	null
+sales_14_days_ago	VIEW	price_band_name	text	YES	null
+sales_14_days_ago	VIEW	performance_date_time	timestamp with time zone	YES	null
+sales_14_days_ago	VIEW	performance_start_time	time without time zone	YES	null
+sales_14_days_ago	VIEW	transaction_completed_at	timestamp with time zone	YES	null
+sales_14_days_ago	VIEW	sold_tickets	integer	YES	null
+sales_14_days_ago	VIEW	comp_tickets	integer	YES	null
+sales_14_days_ago	VIEW	sold_gross_value	numeric	YES	null
+sales_14_days_ago	VIEW	sales_id	text	YES	null
+sales_14_days_ago	VIEW	transaction_date	date	YES	null
+sales_14_days_ago	VIEW	performance_date	date	YES	null
+sales_14_days_ago	VIEW	show_time	text	YES	null
+sales_14_days_ago	VIEW	atp	numeric	YES	null
+sales_14_days_ago	VIEW	transaction_dow	text	YES	null
+sales_14_days_ago	VIEW	record_created_at	timestamp with time zone	YES	null
+sales_21_days_ago	VIEW	id	bigint	YES	null
+sales_21_days_ago	VIEW	transaction_completed_date_time	timestamp with time zone	YES	null
+sales_21_days_ago	VIEW	event_name	text	YES	null
+sales_21_days_ago	VIEW	channel_name	text	YES	null
+sales_21_days_ago	VIEW	price_band_name	text	YES	null
+sales_21_days_ago	VIEW	performance_date_time	timestamp with time zone	YES	null
+sales_21_days_ago	VIEW	performance_start_time	time without time zone	YES	null
+sales_21_days_ago	VIEW	transaction_completed_at	timestamp with time zone	YES	null
+sales_21_days_ago	VIEW	sold_tickets	integer	YES	null
+sales_21_days_ago	VIEW	comp_tickets	integer	YES	null
+sales_21_days_ago	VIEW	sold_gross_value	numeric	YES	null
+sales_21_days_ago	VIEW	sales_id	text	YES	null
+sales_21_days_ago	VIEW	transaction_date	date	YES	null
+sales_21_days_ago	VIEW	performance_date	date	YES	null
+sales_21_days_ago	VIEW	show_time	text	YES	null
+sales_21_days_ago	VIEW	atp	numeric	YES	null
+sales_21_days_ago	VIEW	transaction_dow	text	YES	null
+sales_21_days_ago	VIEW	record_created_at	timestamp with time zone	YES	null
+sales_28_days_ago	VIEW	id	bigint	YES	null
+sales_28_days_ago	VIEW	transaction_completed_date_time	timestamp with time zone	YES	null
+sales_28_days_ago	VIEW	event_name	text	YES	null
+sales_28_days_ago	VIEW	channel_name	text	YES	null
+sales_28_days_ago	VIEW	price_band_name	text	YES	null
+sales_28_days_ago	VIEW	performance_date_time	timestamp with time zone	YES	null
+sales_28_days_ago	VIEW	performance_start_time	time without time zone	YES	null
+sales_28_days_ago	VIEW	transaction_completed_at	timestamp with time zone	YES	null
+sales_28_days_ago	VIEW	sold_tickets	integer	YES	null
+sales_28_days_ago	VIEW	comp_tickets	integer	YES	null
+sales_28_days_ago	VIEW	sold_gross_value	numeric	YES	null
+sales_28_days_ago	VIEW	sales_id	text	YES	null
+sales_28_days_ago	VIEW	transaction_date	date	YES	null
+sales_28_days_ago	VIEW	performance_date	date	YES	null
+sales_28_days_ago	VIEW	show_time	text	YES	null
+sales_28_days_ago	VIEW	atp	numeric	YES	null
+sales_28_days_ago	VIEW	transaction_dow	text	YES	null
+sales_28_days_ago	VIEW	record_created_at	timestamp with time zone	YES	null
+sales_2_days_ago	VIEW	id	bigint	YES	null
+sales_2_days_ago	VIEW	transaction_completed_date_time	timestamp with time zone	YES	null
+sales_2_days_ago	VIEW	event_name	text	YES	null
+sales_2_days_ago	VIEW	channel_name	text	YES	null
+sales_2_days_ago	VIEW	price_band_name	text	YES	null
+sales_2_days_ago	VIEW	performance_date_time	timestamp with time zone	YES	null
+sales_2_days_ago	VIEW	performance_start_time	time without time zone	YES	null
+sales_2_days_ago	VIEW	transaction_completed_at	timestamp with time zone	YES	null
+sales_2_days_ago	VIEW	sold_tickets	integer	YES	null
+sales_2_days_ago	VIEW	comp_tickets	integer	YES	null
+sales_2_days_ago	VIEW	sold_gross_value	numeric	YES	null
+sales_2_days_ago	VIEW	sales_id	text	YES	null
+sales_2_days_ago	VIEW	transaction_date	date	YES	null
+sales_2_days_ago	VIEW	performance_date	date	YES	null
+sales_2_days_ago	VIEW	show_time	text	YES	null
+sales_2_days_ago	VIEW	atp	numeric	YES	null
+sales_2_days_ago	VIEW	transaction_dow	text	YES	null
+sales_2_days_ago	VIEW	record_created_at	timestamp with time zone	YES	null
+sales_3_days_ago	VIEW	id	bigint	YES	null
+sales_3_days_ago	VIEW	transaction_completed_date_time	timestamp with time zone	YES	null
+sales_3_days_ago	VIEW	event_name	text	YES	null
+sales_3_days_ago	VIEW	channel_name	text	YES	null
+sales_3_days_ago	VIEW	price_band_name	text	YES	null
+sales_3_days_ago	VIEW	performance_date_time	timestamp with time zone	YES	null
+sales_3_days_ago	VIEW	performance_start_time	time without time zone	YES	null
+sales_3_days_ago	VIEW	transaction_completed_at	timestamp with time zone	YES	null
+sales_3_days_ago	VIEW	sold_tickets	integer	YES	null
+sales_3_days_ago	VIEW	comp_tickets	integer	YES	null
+sales_3_days_ago	VIEW	sold_gross_value	numeric	YES	null
+sales_3_days_ago	VIEW	sales_id	text	YES	null
+sales_3_days_ago	VIEW	transaction_date	date	YES	null
+sales_3_days_ago	VIEW	performance_date	date	YES	null
+sales_3_days_ago	VIEW	show_time	text	YES	null
+sales_3_days_ago	VIEW	atp	numeric	YES	null
+sales_3_days_ago	VIEW	transaction_dow	text	YES	null
+sales_3_days_ago	VIEW	record_created_at	timestamp with time zone	YES	null
+sales_7_days_ago	VIEW	id	bigint	YES	null
+sales_7_days_ago	VIEW	transaction_completed_date_time	timestamp with time zone	YES	null
+sales_7_days_ago	VIEW	event_name	text	YES	null
+sales_7_days_ago	VIEW	channel_name	text	YES	null
+sales_7_days_ago	VIEW	price_band_name	text	YES	null
+sales_7_days_ago	VIEW	performance_date_time	timestamp with time zone	YES	null
+sales_7_days_ago	VIEW	performance_start_time	time without time zone	YES	null
+sales_7_days_ago	VIEW	transaction_completed_at	timestamp with time zone	YES	null
+sales_7_days_ago	VIEW	sold_tickets	integer	YES	null
+sales_7_days_ago	VIEW	comp_tickets	integer	YES	null
+sales_7_days_ago	VIEW	sold_gross_value	numeric	YES	null
+sales_7_days_ago	VIEW	sales_id	text	YES	null
+sales_7_days_ago	VIEW	transaction_date	date	YES	null
+sales_7_days_ago	VIEW	performance_date	date	YES	null
+sales_7_days_ago	VIEW	show_time	text	YES	null
+sales_7_days_ago	VIEW	atp	numeric	YES	null
+sales_7_days_ago	VIEW	transaction_dow	text	YES	null
+sales_7_days_ago	VIEW	record_created_at	timestamp with time zone	YES	null
+sales_yesterday	VIEW	id	bigint	YES	null
+sales_yesterday	VIEW	transaction_completed_date_time	timestamp with time zone	YES	null
+sales_yesterday	VIEW	event_name	text	YES	null
+sales_yesterday	VIEW	channel_name	text	YES	null
+sales_yesterday	VIEW	price_band_name	text	YES	null
+sales_yesterday	VIEW	performance_date_time	timestamp with time zone	YES	null
+sales_yesterday	VIEW	performance_start_time	time without time zone	YES	null
+sales_yesterday	VIEW	transaction_completed_at	timestamp with time zone	YES	null
+sales_yesterday	VIEW	sold_tickets	integer	YES	null
+sales_yesterday	VIEW	comp_tickets	integer	YES	null
+sales_yesterday	VIEW	sold_gross_value	numeric	YES	null
+sales_yesterday	VIEW	sales_id	text	YES	null
+sales_yesterday	VIEW	transaction_date	date	YES	null
+sales_yesterday	VIEW	performance_date	date	YES	null
+sales_yesterday	VIEW	show_time	text	YES	null
+sales_yesterday	VIEW	atp	numeric	YES	null
+sales_yesterday	VIEW	transaction_dow	text	YES	null
+sales_yesterday	VIEW	record_created_at	timestamp with time zone	YES	null
+subtotal_by_date_event	VIEW	transaction_date	date	YES	null
+subtotal_by_date_event	VIEW	event_name	text	YES	null
+subtotal_by_date_event	VIEW	total_tickets_sold	bigint	YES	null
+subtotal_by_date_event	VIEW	total_comp_tickets	bigint	YES	null
+subtotal_by_date_event	VIEW	total_gross_value	numeric	YES	null
+subtotal_by_date_event	VIEW	average_ticket_price	numeric	YES	null
+subtotal_by_event_date_showtime	VIEW	event_name	text	YES	null
+subtotal_by_event_date_showtime	VIEW	transaction_date	date	YES	null
+subtotal_by_event_date_showtime	VIEW	show_time	text	YES	null
+subtotal_by_event_date_showtime	VIEW	total_tickets_sold	bigint	YES	null
+subtotal_by_event_date_showtime	VIEW	total_comp_tickets	bigint	YES	null
+subtotal_by_event_date_showtime	VIEW	total_gross_value	numeric	YES	null
+subtotal_by_event_date_showtime	VIEW	average_ticket_price	numeric	YES	null
+subtotal_by_event_date_time	VIEW	event_name	text	YES	null
+subtotal_by_event_date_time	VIEW	transaction_date	date	YES	null
+subtotal_by_event_date_time	VIEW	performance_start_time	time without time zone	YES	null
+subtotal_by_event_date_time	VIEW	total_tickets_sold	bigint	YES	null
+subtotal_by_event_date_time	VIEW	total_comp_tickets	bigint	YES	null
+subtotal_by_event_date_time	VIEW	total_gross_value	numeric	YES	null
+subtotal_by_event_date_time	VIEW	average_ticket_price	numeric	YES	null

@@ -1,10 +1,10 @@
 import useSWR, { useSWRConfig } from 'swr';
 import { useRouter } from 'next/router';
-import { FiHome } from 'react-icons/fi';
 import { MdOutlineConfirmationNumber } from 'react-icons/md';
 import styles from '@/styles/Home.module.css';
 import { supabase } from '@/lib/supabaseClient';
 import { fetcher as eventFetcher } from '@/hooks/useEvent';
+import CompanyOverview from '@/components/CompanyOverview'; // Import the new component
 
 const fetcher = async (url) => {
   const { data, error } = await supabase.from('event_summary').select('*');
@@ -40,15 +40,6 @@ export default function Home() {
       </div>
 
       <div className={styles.grid}>
-        <div className={styles.overviewCard} onClick={() => router.push('/')}>
-          <div className={styles.overviewIcon}>
-            <FiHome />
-          </div>
-          <h2 className={styles.overviewTitle}>Company Overview</h2>
-          <p className={styles.overviewSubtitle}>REPORT</p>
-          <button className={styles.button}>View Dashboard</button>
-        </div>
-
         {events.map((event) => (
           <div
             key={event.event_name}
@@ -76,6 +67,9 @@ export default function Home() {
           </div>
         ))}
       </div>
+
+      {/* Add the new CompanyOverview component below the grid */}
+      <CompanyOverview />
     </div>
   );
 }

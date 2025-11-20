@@ -1,0 +1,159 @@
+/* === Base Styles === */
+.overviewContainer {
+  padding: 2.5rem;
+  background-color: #0f172a; /* Dark blue-gray background */
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  color: #e2e8f0; /* Light gray text */
+}
+
+/* === Typography === */
+.overviewTitle {
+  font-size: 3rem;
+  font-weight: 800;
+  color: #ffffff;
+  margin-bottom: 2.5rem;
+  text-align: center;
+  letter-spacing: -1px;
+}
+
+.chartTitle {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: #cbd5e1;
+  margin-bottom: 0; /* Adjusted for flex layout */
+}
+
+/* === Grid Layout === */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 2.5rem;
+}
+
+.fullWidth {
+  grid-column: 1 / -1;
+}
+
+/* === Chart & Table Sections === */
+.chartSection {
+  background-color: #1e293b; /* Slightly lighter dark blue */
+  border-radius: 12px;
+  padding: 2rem;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  border: 1px solid #334155;
+  display: flex;
+  flex-direction: column;
+}
+
+.chartSection:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+}
+
+.chartHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+}
+
+.toggleButton {
+  background-color: #334155;
+  color: #e2e8f0;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.toggleButton:hover {
+  background-color: #475569;
+}
+
+
+/* === Tooltip === */
+.customTooltip {
+  background-color: #2b3a4f;
+  border: 1px solid #4a5a70;
+  padding: 12px;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+  color: #e2e8f0;
+}
+
+.tooltipLabel {
+  font-weight: bold;
+  margin: 0;
+  color: #ffffff;
+}
+
+.tooltipValue {
+  margin: 0 0 4px;
+}
+
+.referenceLabel {
+    font-size: 0.8rem;
+    font-weight: 600;
+    fill: #cbd5e1;
+}
+
+
+/* === Table === */
+.tableContainer {
+  max-height: 400px;
+  overflow-y: auto;
+  flex-grow: 1;
+}
+
+.summaryTable {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.summaryTable th, .summaryTable td {
+  padding: 14px 18px;
+  border-bottom: 1px solid #334155;
+  text-align: left;
+}
+
+.summaryTable th {
+  background-color: #2a3a4e;
+  font-weight: 700;
+  color: #cbd5e1;
+  position: sticky;
+  top: 0;
+  z-index: 1;
+}
+
+.summaryTable tbody tr {
+  transition: background-color 0.2s ease;
+}
+
+.summaryTable tbody tr:hover {
+  background-color: #253346;
+}
+
+/* === Loading & Error States === */
+.loading, .error {
+  text-align: center;
+  padding: 4rem;
+  font-size: 1.5rem;
+  color: #94a3b8;
+}
+
+/* === Responsive Adjustments === */
+@media (max-width: 1200px) {
+    .grid {
+        grid-template-columns: 1fr;
+    }
+    .chartHeader {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    .chartTitle {
+        margin-bottom: 1rem;
+    }
+}
