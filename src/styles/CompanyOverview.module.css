@@ -1,9 +1,10 @@
 /* === Base Styles === */
 .overviewContainer {
   padding: 2.5rem;
-  background-color: #0f172a; /* Dark blue-gray background */
+  background-color: #0f172a;
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-  color: #e2e8f0; /* Light gray text */
+  color: #e2e8f0;
+  transition: padding 0.3s ease-in-out;
 }
 
 /* === Typography === */
@@ -20,7 +21,7 @@
   font-size: 1.75rem;
   font-weight: 700;
   color: #cbd5e1;
-  margin-bottom: 0; /* Adjusted for flex layout */
+  margin-bottom: 0;
 }
 
 /* === Grid Layout === */
@@ -36,35 +37,54 @@
 
 /* === Chart & Table Sections === */
 .chartSection {
-  background-color: #1e293b; /* Slightly lighter dark blue */
+  background-color: #1e293b;
   border-radius: 12px;
   padding: 2rem;
   box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
   border: 1px solid #334155;
   display: flex;
   flex-direction: column;
-  position: relative; /* For loading overlay */
-}
-
-.chartSection:hover {
-  transform: translateY(-8px);
-  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  position: relative;
 }
 
 .chartHeader {
   display: flex;
   justify-content: space-between;
-  align-items: flex-start; /* Align to top */
+  align-items: flex-start;
   margin-bottom: 2rem;
-  flex-wrap: wrap; /* Allow wrapping */
+  flex-wrap: wrap;
+}
+
+/* === FOCUS MODE === */
+.focusMode {
+  padding: 1rem;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #0f172a;
+  z-index: 100;
+  overflow-y: auto; /* Allow scrolling if content overflows */
+}
+
+.focusGrid {
+  display: block;
+  height: 100%;
+}
+
+.focusMode .chartSection {
+  height: 100%;
+  border: none;
+  box-shadow: none;
 }
 
 /* === Interactive Controls === */
 .controlsContainer {
     display: flex;
-    gap: 1.5rem;
-    margin-top: 1rem; /* Space below title */
+    flex-wrap: wrap; /* Allow controls to wrap on smaller screens */
+    gap: 1rem;
+    margin-top: 1rem;
 }
 
 .controlGroup {
@@ -95,115 +115,146 @@
   color: #ffffff;
 }
 
-/* === Tooltip & Reference Lines === */
+.headerActions {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.actionButton {
+    background-color: #2b3a4f;
+    border: 1px solid #4a5a70;
+    color: #e2e8f0;
+    border-radius: 8px;
+    padding: 10px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem; /* Icon size */
+    transition: background-color 0.2s ease;
+}
+
+.actionButton:hover {
+    background-color: #475569;
+}
+
+/* === Tooltip & Annotations === */
 .customTooltip {
   background-color: #2b3a4f;
   border: 1px solid #4a5a70;
   padding: 12px;
   border-radius: 8px;
   box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-  color: #e2e8f0;
 }
 
-.tooltipLabel {
-  font-weight: bold;
-  margin: 0;
+.tooltipLabel { font-weight: bold; margin: 0; color: #ffffff; }
+.tooltipValue { margin: 4px 0 0; }
+
+.annotationMarker {
+    width: 24px;
+    height: 24px;
+    background-color: #fef08a;
+    color: #854d0e;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    cursor: help;
+    border: 2px solid #ca8a04;
+    box-sizing: border-box;
+}
+
+/* === Modal (for Annotations) === */
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(15, 23, 42, 0.8);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.modal {
+  background: #1e293b;
+  padding: 2rem;
+  border-radius: 12px;
+  border: 1px solid #334155;
+  width: 90%;
+  max-width: 500px;
+  outline: none;
+}
+
+.modal h2 {
+  margin-top: 0;
   color: #ffffff;
 }
 
-.tooltipValue {
-  margin: 4px 0 0;
+.formGroup {
+  margin-bottom: 1.5rem;
 }
 
-.referenceLabel {
-    font-size: 0.8rem;
-    font-weight: 600;
-    fill: #cbd5e1;
+.formGroup label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+}
+
+.formGroup input, .formGroup textarea {
+  width: 100%;
+  background-color: #0f172a;
+  border: 1px solid #4a5a70;
+  border-radius: 8px;
+  padding: 10px;
+  color: #e2e8f0;
+  font-size: 1rem;
+}
+
+.formActions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+}
+
+.cancelButton, .submitButton {
+  padding: 10px 20px;
+  border-radius: 8px;
+  border: none;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.cancelButton {
+  background-color: #475569;
+  color: #ffffff;
+}
+
+.submitButton {
+  background-color: #82ca9d;
+  color: #1a202c;
 }
 
 /* === Table Styles === */
-.tableContainer {
-  max-height: 400px;
-  overflow-y: auto;
-  flex-grow: 1;
-}
-
-.summaryTable {
-  width: 100%;
-  border-collapse: collapse;
-}
-
-.summaryTable th, .summaryTable td {
-  padding: 14px 18px;
-  border-bottom: 1px solid #334155;
-  text-align: left;
-}
-
-.summaryTable th {
-  background-color: #2a3a4e;
-  font-weight: 700;
-  color: #cbd5e1;
-  position: sticky;
-  top: 0;
-  z-index: 1;
-}
-
-.summaryTable tbody tr {
-  transition: background-color 0.2s ease;
-}
-
-.summaryTable tbody tr:hover {
-  background-color: #253346;
-}
+.tableContainer { max-height: 400px; overflow-y: auto; flex-grow: 1; }
+.summaryTable { width: 100%; border-collapse: collapse; }
+.summaryTable th, .summaryTable td { padding: 14px 18px; border-bottom: 1px solid #334155; text-align: left; }
+.summaryTable th { background-color: #2a3a4e; font-weight: 700; color: #cbd5e1; position: sticky; top: 0; z-index: 1; }
+.summaryTable tbody tr:hover { background-color: #253346; }
 
 /* === States & Overlays === */
-.loading, .error {
-  text-align: center;
-  padding: 4rem;
-  font-size: 1.5rem;
-  color: #94a3b8;
-}
-
-.loadingOverlay {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: rgba(30, 41, 59, 0.7);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-size: 1.5rem;
-    color: #e2e8f0;
-    border-radius: 12px;
-    z-index: 10;
-}
+.loadingOverlay { position: absolute; top: 0; left: 0; right: 0; bottom: 0; background-color: rgba(30, 41, 59, 0.7); display: flex; justify-content: center; align-items: center; font-size: 1.5rem; color: #e2e8f0; border-radius: 12px; z-index: 10; }
 
 /* === Responsive Adjustments === */
 @media (max-width: 1200px) {
-    .grid {
-        grid-template-columns: 1fr;
-    }
+    .grid { grid-template-columns: 1fr; }
 }
 
 @media (max-width: 768px) {
-    .chartHeader {
-        flex-direction: column;
-        align-items: stretch;
-    }
-    .controlsContainer {
-        flex-direction: column;
-        gap: 1rem;
-        width: 100%;
-    }
-    .controlGroup {
-        justify-content: center;
-    }
-    .overviewTitle {
-        font-size: 2.5rem;
-    }
-    .chartTitle {
-        text-align: center;
-    }
+    .chartHeader { flex-direction: column; align-items: stretch; }
+    .controlsContainer { flex-direction: column; gap: 1rem; width: 100%; }
+    .controlGroup { justify-content: center; }
 }
