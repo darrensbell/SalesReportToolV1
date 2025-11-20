@@ -1,0 +1,127 @@
+
+/* General Container for the PDF Report */
+.reportContainer {
+  width: 1123px; /* A4 landscape width at 96 DPI */
+  height: 794px; /* A4 landscape height at 96 DPI */
+  padding: 40px;
+  background-color: white;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  color: #333;
+  display: flex;
+  flex-direction: column;
+  position: absolute; /* Ensures it is rendered off-screen */
+  left: -9999px;
+  top: 0;
+}
+
+/* Header Section */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  border-bottom: 3px solid #e0e0e0;
+  padding-bottom: 10px;
+}
+
+.header h1 {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #d9534f; /* Red color from image */
+  margin: 0;
+}
+
+.header p {
+  font-size: 0.8rem;
+  color: #666;
+  margin: 0;
+}
+
+/* Title Section */
+.titleSection {
+  text-align: left;
+  padding: 20px 0;
+}
+
+.titleSection h2 {
+  font-size: 2.5rem;
+  font-weight: bold;
+  margin: 0;
+}
+
+.titleSection p {
+  font-size: 1rem;
+  color: #666;
+  margin-top: 5px;
+}
+
+/* KPI Grid */
+.kpiGrid {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 15px;
+  margin-bottom: 30px;
+}
+
+.kpiTile {
+  background-color: #d9534f; /* Red color from image */
+  color: white;
+  padding: 15px;
+  border-radius: 5px;
+  text-align: center;
+}
+
+.kpiTile h4 {
+  margin: 0 0 10px 0;
+  font-size: 0.8rem;
+  font-weight: bold;
+}
+
+.kpiTile p {
+  margin: 0;
+  font-size: 2rem;
+  font-weight: bold;
+}
+
+/* Body Layout */
+.bodyGrid {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 40px;
+  flex-grow: 1;
+}
+
+.bodyGrid > div > h4 {
+  font-size: 1rem;
+  font-weight: bold;
+  border-bottom: 2px solid #d9534f;
+  padding-bottom: 8px;
+  margin-bottom: 15px;
+}
+
+/* Data Tables */
+.dataTable {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+}
+
+.dataTable th, .dataTable td {
+  padding: 10px;
+  text-align: left;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.dataTable th {
+  font-weight: bold;
+  background-color: #f9f9f9;
+}
+
+.dataTable td:nth-child(2), 
+.dataTable td:nth-child(3),
+.dataTable td:nth-child(4) {
+  text-align: right;
+}
+
+.dataTable thead th {
+  border-bottom: 2px solid #ccc;
+}

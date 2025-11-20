@@ -6,6 +6,7 @@ import { MdOutlineConfirmationNumber } from 'react-icons/md';
 import styles from '../../styles/Event.module.css';
 import { useEvent } from '../../hooks/useEvent';
 import { useLastDayStats } from '../../hooks/useLastDayStats';
+import { useEarliestPerformance } from '../../hooks/useEarliestPerformance';
 import { supabase } from '../../lib/supabaseClient'; // Import supabase
 
 const StatCard = ({ title, value, subtext, icon }) => (
@@ -29,6 +30,7 @@ export default function EventDashboard() {
 
   const { data: eventData, error: eventError, isLoading: eventIsLoading } = useEvent(event_name);
   const { data: lastDayStats, error: statsError, isLoading: statsIsLoading } = useLastDayStats(event_name);
+  const { days: daysToPerformance, isLoading: daysIsLoading, error: daysError } = useEarliestPerformance(event_name);
 
   // Fetch total capacity directly from the 'shows' table as you instructed.
   useEffect(() => {
@@ -70,11 +72,11 @@ export default function EventDashboard() {
     }
   }, [eventData, totalCapacity]);
 
-  if (eventIsLoading || statsIsLoading) {
+  if (eventIsLoading || statsIsLoading || daysIsLoading) {
     return <div>Loading...</div>;
   }
 
-  if (eventError || statsError) {
+  if (eventError || statsError || daysError) {
     return <div>Error loading data</div>;
   }
 
@@ -128,7 +130,7 @@ export default function EventDashboard() {
         />
         <StatCard
             title="Days to Performance"
-            value="124"
+            value={daysToPerformance !== null ? daysToPerformance : 'N/A'}
             subtext="Until first show"
             icon={<FiCalendar />}
         />

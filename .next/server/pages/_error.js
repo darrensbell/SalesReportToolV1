@@ -263,7 +263,7 @@ module.exports = import("swr");;
 /***/ ((module) => {
 
 "use strict";
-module.exports = /*#__PURE__*/JSON.parse('{"name":"sales-dashboard","version":"1.3.0","private":true,"scripts":{"dev":"next dev","build":"next build","start":"next start","lint":"next lint","format":"prettier --write ."},"dependencies":{"@supabase/supabase-js":"^2.83.0","next":"14.2.33","papaparse":"^5.5.3","react":"^18","react-dom":"^18","react-icons":"^5.5.0","react-modal":"^3.16.3","swr":"^2.3.6"},"devDependencies":{"@types/node":"^20","@types/react":"^18","@types/react-dom":"^18","eslint":"^8","eslint-config-next":"14.2.33","prettier":"^3.6.2","typescript":"^5"}}');
+module.exports = /*#__PURE__*/JSON.parse('{"name":"sales-dashboard","version":"1.3.1","private":true,"scripts":{"dev":"next dev","build":"next build","start":"next start","lint":"next lint","format":"prettier --write ."},"dependencies":{"@supabase/supabase-js":"^2.83.0","html2canvas":"^1.4.1","jspdf":"^2.5.1","next":"14.2.33","papaparse":"^5.5.3","react":"^18","react-dom":"^18","react-icons":"^5.5.0","react-modal":"^3.16.3","swr":"^2.3.6"},"devDependencies":{"@types/node":"^20","@types/react":"^18","@types/react-dom":"^18","eslint":"^8","eslint-config-next":"14.2.33","prettier":"^3.6.2","typescript":"^5"}}');
 
 /***/ })
 
